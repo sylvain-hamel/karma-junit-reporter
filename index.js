@@ -47,13 +47,19 @@ var JUnitReporter = function(baseReporterDecorator, config, logger, helper, form
     var suite = suites[browser.id];
     var result = browser.lastResult;
 
-    suite.att('tests', result.total);
-    suite.att('errors', result.disconnected || result.error ? 1 : 0);
-    suite.att('failures', result.failed);
-    suite.att('time', (result.netTime || 0) / 1000);
+    try {
+      suite.att('tests', result.total);
+      suite.att('errors', result.disconnected || result.error ? 1 : 0);
+      suite.att('failures', result.failed);
+      suite.att('time', (result.netTime || 0) / 1000);
 
-    suite.ele('system-out').dat(allMessages.join() + '\n');
-    suite.ele('system-err');
+      suite.ele('system-out').dat(allMessages.join() + '\n');
+      suite.ele('system-err');
+    }
+    catch( error )
+    {
+      throw new Error("The error happens here!!! with " + browser.id);
+    }
   };
 
   this.onRunComplete = function() {
